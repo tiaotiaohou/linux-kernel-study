@@ -1,0 +1,119 @@
+Remote debugging using localhost:1234
+0x0000000000400580 in _start ()
+Breakpoint 1 at 0x4006ec: file week040120262811.c, line 7.
+Continuing.
+
+Breakpoint 1, f (x=0) at week040120262811.c:7
+7	{
+=> 0x4006ec <f>:	stp	x29, x30, [sp, #-48]!
+pc             0x4006ec            0x4006ec <f>
+sp             0x55007ff7e0        0x55007ff7e0
+x29            0x55007ff7e0        365080606688
+x30            0x40072c            4196140
+x0             0x8                 8
+0x55007ff7e0:	0x00000055007ff7f0	0x00000000004007e4
+0x55007ff7f0:	0x00000055007ff900	0x0000000000400b64
+0x55007ff800:	0x00000055007ff830	0x00000000004005b4
+A syntax error in expression, near `$pc
+info registers pc sp x29 x30
+x/2gx $sp'.
+A syntax error in expression, near `$pc
+info registers pc sp x29 x30
+x/2gx $sp'.
+pc             0x4006ec            0x4006ec <f>
+sp             0x55007ff7e0        0x55007ff7e0
+x29            0x55007ff7e0        365080606688
+x30            0x40072c            4196140
+x0             0x8                 8
+0x00000000004006f0	7	{
+pc             0x4006f0            0x4006f0 <f+4>
+sp             0x55007ff7b0        0x55007ff7b0
+x29            0x55007ff7e0        365080606688
+x30            0x40072c            4196140
+0x55007ff7b0:	0x00000055007ff7e0	0x000000000040072c
+0x00000000004006f4	7	{
+pc             0x4006f4            0x4006f4 <f+8>
+sp             0x55007ff7b0        0x55007ff7b0
+x29            0x55007ff7b0        365080606640
+x30            0x40072c            4196140
+0x55007ff7b0:	0x00000055007ff7e0	0x000000000040072c
+8	    int i = 11;
+pc             0x4006f8            0x4006f8 <f+12>
+sp             0x55007ff7b0        0x55007ff7b0
+x0             0x8                 8
+0x55007ff7cc:	8
+0x00000000004006fc	8	    int i = 11;
+pc             0x4006fc            0x4006fc <f+16>
+sp             0x55007ff7b0        0x55007ff7b0
+x0             0xb                 11
+9	    return g(x) + i;
+pc             0x400700            0x400700 <f+20>
+sp             0x55007ff7b0        0x55007ff7b0
+x0             0xb                 11
+0x55007ff7cc:	8
+0x55007ff7dc:	11
+0x0000000000400704	9	    return g(x) + i;
+pc             0x400704            0x400704 <f+24>
+sp             0x55007ff7b0        0x55007ff7b0
+x0             0x8                 8
+g (x=0) at week040120262811.c:2
+2	{
+pc             0x4006d4            0x4006d4 <g>
+sp             0x55007ff7b0        0x55007ff7b0
+x29            0x55007ff7b0        365080606640
+x30            0x400708            4196104
+x0             0x8                 8
+0x55007ff7b0:	0x00000055007ff7e0	0x000000000040072c
+=> 0x4006d4 <g>:	sub	sp, sp, #0x10
+0x00000000004006d8	2	{
+pc             0x4006d8            0x4006d8 <g+4>
+sp             0x55007ff7a0        0x55007ff7a0
+x29            0x55007ff7b0        365080606640
+x30            0x400708            4196104
+x0             0x8                 8
+Run till exit from #0  0x00000000004006d8 in g (x=0) at week040120262811.c:2
+0x0000000000400708 in f (x=8) at week040120262811.c:9
+9	    return g(x) + i;
+Value returned is $1 = 11
+pc             0x400708            0x400708 <f+28>
+sp             0x55007ff7b0        0x55007ff7b0
+x29            0x55007ff7b0        365080606640
+x30            0x400708            4196104
+x0             0xb                 11
+=> 0x400708 <f+28>:	mov	w1, w0
+0x55007ff7dc:	11
+9	    return g(x) + i;
+pc             0x40070c            0x40070c <f+32>
+sp             0x55007ff7b0        0x55007ff7b0
+x0             0xb                 11
+x1             0xb                 11
+0x0000000000400710	9	    return g(x) + i;
+pc             0x400710            0x400710 <f+36>
+sp             0x55007ff7b0        0x55007ff7b0
+x0             0xb                 11
+x1             0xb                 11
+10	}
+pc             0x400714            0x400714 <f+40>
+sp             0x55007ff7b0        0x55007ff7b0
+x0             0x16                22
+x1             0xb                 11
+=> 0x400714 <f+40>:	ldp	x29, x30, [sp], #48
+0x0000000000400718	10	}
+pc             0x400718            0x400718 <f+44>
+sp             0x55007ff7e0        0x55007ff7e0
+x29            0x55007ff7e0        365080606688
+x30            0x40072c            4196140
+x0             0x16                22
+main () at week040120262811.c:14
+14	    return f(8) + 1;
+pc             0x40072c            0x40072c <main+16>
+sp             0x55007ff7e0        0x55007ff7e0
+x29            0x55007ff7e0        365080606688
+x30            0x40072c            4196140
+x0             0x16                22
+15	}
+pc             0x400730            0x400730 <main+20>
+sp             0x55007ff7e0        0x55007ff7e0
+x0             0x17                23
+Continuing.
+[Inferior 1 (process 1) exited with code 027]
