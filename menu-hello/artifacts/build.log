@@ -1,0 +1,4 @@
+gcc -o init linktable.c menu.c test.c -m32 -static -lpthread
+gcc -o hello hello.c -m32 -static
+find init hello | cpio -o -Hnewc |gzip -9 > ../rootfs.img
+3246 blocks
