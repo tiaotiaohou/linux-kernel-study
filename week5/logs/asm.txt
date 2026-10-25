@@ -1,0 +1,15 @@
+COMMAND: gcc -m64 -std=gnu99 -O0 -g -Wall -Wextra src/write_asm.c -o bin/write_asm
+
+
+EXIT_STATUS: 0
+
+COMMAND: file bin/write_asm
+bin/write_asm: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3de007133d5fec92a74912941d3f75be747f7805, for GNU/Linux 3.2.0, with debug_info, not stripped
+
+EXIT_STATUS: 0
+
+COMMAND: ./bin/write_asm
+Hello, Linux syscall!
+ASM: write returned 22 bytes
+
+EXIT_STATUS: 0

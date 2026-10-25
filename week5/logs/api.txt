@@ -1,0 +1,15 @@
+COMMAND: gcc -m64 -std=gnu99 -O0 -g -Wall -Wextra src/write_api.c -o bin/write_api
+
+
+EXIT_STATUS: 0
+
+COMMAND: file bin/write_api
+bin/write_api: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d874d7c7cf3718943d9e6c934a62ff036e8b51d2, for GNU/Linux 3.2.0, with debug_info, not stripped
+
+EXIT_STATUS: 0
+
+COMMAND: ./bin/write_api
+Hello, Linux syscall!
+API: write returned 22 bytes
+
+EXIT_STATUS: 0

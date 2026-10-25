@@ -1,0 +1,26 @@
+COMMAND: objdump -d -M intel -j .text --disassemble=raw_write bin/write_asm
+
+bin/write_asm:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000001189 <raw_write>:
+    1189:	f3 0f 1e fa          	endbr64 
+    118d:	55                   	push   rbp
+    118e:	48 89 e5             	mov    rbp,rsp
+    1191:	89 7d ec             	mov    DWORD PTR [rbp-0x14],edi
+    1194:	48 89 75 e0          	mov    QWORD PTR [rbp-0x20],rsi
+    1198:	48 89 55 d8          	mov    QWORD PTR [rbp-0x28],rdx
+    119c:	8b 45 ec             	mov    eax,DWORD PTR [rbp-0x14]
+    119f:	48 63 f8             	movsxd rdi,eax
+    11a2:	b8 01 00 00 00       	mov    eax,0x1
+    11a7:	48 8b 75 e0          	mov    rsi,QWORD PTR [rbp-0x20]
+    11ab:	48 8b 55 d8          	mov    rdx,QWORD PTR [rbp-0x28]
+    11af:	0f 05                	syscall 
+    11b1:	48 89 45 f8          	mov    QWORD PTR [rbp-0x8],rax
+    11b5:	48 8b 45 f8          	mov    rax,QWORD PTR [rbp-0x8]
+    11b9:	5d                   	pop    rbp
+    11ba:	c3                   	ret
+
+EXIT_STATUS: 0

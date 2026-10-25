@@ -1,0 +1,178 @@
+{
+  "recorded_at": "2026-10-23T18:27:59+08:00",
+  "working_directory": "/mnt/d/zhuomian/mdstduy/week5",
+  "environment": [
+    {
+      "args": [
+        "uname",
+        "-m"
+      ],
+      "command": "uname -m",
+      "stdout": "x86_64\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "uname",
+        "-r"
+      ],
+      "command": "uname -r",
+      "stdout": "6.6.87.2-microsoft-standard-WSL2\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "getconf",
+        "LONG_BIT"
+      ],
+      "command": "getconf LONG_BIT",
+      "stdout": "64\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "gcc",
+        "-dumpmachine"
+      ],
+      "command": "gcc -dumpmachine",
+      "stdout": "x86_64-linux-gnu\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "gcc",
+        "--version"
+      ],
+      "command": "gcc --version",
+      "stdout": "gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "cat",
+        "/etc/os-release"
+      ],
+      "command": "cat /etc/os-release",
+      "stdout": "PRETTY_NAME=\"Ubuntu 22.04.3 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"22.04\"\nVERSION=\"22.04.3 LTS (Jammy Jellyfish)\"\nVERSION_CODENAME=jammy\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=jammy\n",
+      "stderr": "",
+      "exit_code": 0
+    }
+  ],
+  "api": {
+    "source": {
+      "path": "src/write_api.c",
+      "sha256": "e2079e54f112c000b7b5a35bfd217c0b634b4695ec57dabdcf492369c28dbeee",
+      "text": "#include <stdio.h>\n#include <unistd.h>\n\nint main(void)\n{\n    const char msg[] = \"Hello, Linux syscall!\\n\";\n    ssize_t ret = write(STDOUT_FILENO, msg, sizeof(msg) - 1);\n\n    if (ret == -1) {\n        perror(\"write\");\n        return 1;\n    }\n\n    printf(\"API: write returned %ld bytes\\n\", (long)ret);\n    return ret == (ssize_t)(sizeof(msg) - 1) ? 0 : 1;\n}\n"
+    },
+    "commands": [
+      {
+        "args": [
+          "gcc",
+          "-m64",
+          "-std=gnu99",
+          "-O0",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "src/write_api.c",
+          "-o",
+          "bin/write_api"
+        ],
+        "command": "gcc -m64 -std=gnu99 -O0 -g -Wall -Wextra src/write_api.c -o bin/write_api",
+        "stdout": "",
+        "stderr": "",
+        "exit_code": 0
+      },
+      {
+        "args": [
+          "file",
+          "bin/write_api"
+        ],
+        "command": "file bin/write_api",
+        "stdout": "bin/write_api: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d874d7c7cf3718943d9e6c934a62ff036e8b51d2, for GNU/Linux 3.2.0, with debug_info, not stripped\n",
+        "stderr": "",
+        "exit_code": 0
+      },
+      {
+        "args": [
+          "./bin/write_api"
+        ],
+        "command": "./bin/write_api",
+        "stdout": "Hello, Linux syscall!\nAPI: write returned 22 bytes\n",
+        "stderr": "",
+        "exit_code": 0
+      }
+    ]
+  },
+  "asm": {
+    "source": {
+      "path": "src/write_asm.c",
+      "sha256": "2754ac1c94449c918dfe3f5e1384027d60b4cfeb85821c52f84de690b03e573c",
+      "text": "#include <stdio.h>\n#include <unistd.h>\n#include <sys/syscall.h>\n\nstatic long raw_write(int fd, const void *buf, size_t count)\n{\n    long ret;\n    __asm__ __volatile__(\n        \"syscall\"\n        : \"=a\"(ret)\n        : \"0\"((long)SYS_write), \"D\"((long)fd), \"S\"(buf), \"d\"(count)\n        : \"rcx\", \"r11\", \"cc\", \"memory\"\n    );\n    return ret;\n}\n\nint main(void)\n{\n    const char msg[] = \"Hello, Linux syscall!\\n\";\n    long ret = raw_write(STDOUT_FILENO, msg, sizeof(msg) - 1);\n\n    if (ret < 0) {\n        fprintf(stderr, \"raw write failed: %ld\\n\", ret);\n        return 1;\n    }\n\n    printf(\"ASM: write returned %ld bytes\\n\", ret);\n    return ret == (long)(sizeof(msg) - 1) ? 0 : 1;\n}\n"
+    },
+    "commands": [
+      {
+        "args": [
+          "gcc",
+          "-m64",
+          "-std=gnu99",
+          "-O0",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "src/write_asm.c",
+          "-o",
+          "bin/write_asm"
+        ],
+        "command": "gcc -m64 -std=gnu99 -O0 -g -Wall -Wextra src/write_asm.c -o bin/write_asm",
+        "stdout": "",
+        "stderr": "",
+        "exit_code": 0
+      },
+      {
+        "args": [
+          "file",
+          "bin/write_asm"
+        ],
+        "command": "file bin/write_asm",
+        "stdout": "bin/write_asm: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3de007133d5fec92a74912941d3f75be747f7805, for GNU/Linux 3.2.0, with debug_info, not stripped\n",
+        "stderr": "",
+        "exit_code": 0
+      },
+      {
+        "args": [
+          "./bin/write_asm"
+        ],
+        "command": "./bin/write_asm",
+        "stdout": "Hello, Linux syscall!\nASM: write returned 22 bytes\n",
+        "stderr": "",
+        "exit_code": 0
+      }
+    ]
+  },
+  "disassembly": {
+    "commands": [
+      {
+        "args": [
+          "objdump",
+          "-d",
+          "-M",
+          "intel",
+          "-j",
+          ".text",
+          "--disassemble=raw_write",
+          "bin/write_asm"
+        ],
+        "command": "objdump -d -M intel -j .text --disassemble=raw_write bin/write_asm",
+        "stdout": "\nbin/write_asm:     file format elf64-x86-64\n\n\nDisassembly of section .text:\n\n0000000000001189 <raw_write>:\n    1189:\tf3 0f 1e fa          \tendbr64 \n    118d:\t55                   \tpush   rbp\n    118e:\t48 89 e5             \tmov    rbp,rsp\n    1191:\t89 7d ec             \tmov    DWORD PTR [rbp-0x14],edi\n    1194:\t48 89 75 e0          \tmov    QWORD PTR [rbp-0x20],rsi\n    1198:\t48 89 55 d8          \tmov    QWORD PTR [rbp-0x28],rdx\n    119c:\t8b 45 ec             \tmov    eax,DWORD PTR [rbp-0x14]\n    119f:\t48 63 f8             \tmovsxd rdi,eax\n    11a2:\tb8 01 00 00 00       \tmov    eax,0x1\n    11a7:\t48 8b 75 e0          \tmov    rsi,QWORD PTR [rbp-0x20]\n    11ab:\t48 8b 55 d8          \tmov    rdx,QWORD PTR [rbp-0x28]\n    11af:\t0f 05                \tsyscall \n    11b1:\t48 89 45 f8          \tmov    QWORD PTR [rbp-0x8],rax\n    11b5:\t48 8b 45 f8          \tmov    rax,QWORD PTR [rbp-0x8]\n    11b9:\t5d                   \tpop    rbp\n    11ba:\tc3                   \tret    \n",
+        "stderr": "",
+        "exit_code": 0
+      }
+    ]
+  }
+}
